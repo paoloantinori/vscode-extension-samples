@@ -1,12 +1,38 @@
 // This script will be run within the webview itself
 // It cannot access the main VS Code APIs directly.
 (function () {
+
+    // due to security model issue cannot inline script with "onclick" attribute, so I have to attach event handlers programmatically
+    console.log("my script loaded");
+    document.addEventListener("DOMContentLoaded", function(event) { 
+        console.log("my document event handler ready loaded");
+        const addEventListenerForSendButton = () => {
+            console.log("my click event handler ready loaded");
+            var el = document.getElementById("sendButton");
+            if (el !== null) {
+                el.addEventListener('click', clickHandler);
+            }
+        };
+        const clickHandler = () => {
+            console.log("doSubmit invoked");
+            var el = document.getElementById("my_input");
+            // Send a message back to the extension
+            vscode.postMessage({
+                command: 'apicurito',
+                text: el.value
+            });
+        }
+
+        addEventListenerForSendButton();
+      });
+
+    //connect to the vscode api
     const vscode = acquireVsCodeApi();
 
     const oldState = vscode.getState();
 
     const counter = document.getElementById('lines-of-code-counter');
-    console.log(oldState);
+    console.log("############" + oldState);
     let currentCount = (oldState && oldState.count) || 0;
     counter.textContent = currentCount;
 

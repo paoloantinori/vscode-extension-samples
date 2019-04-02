@@ -105,9 +105,13 @@ class CatCodingPanel {
 		// Handle messages from the webview
 		this._panel.webview.onDidReceiveMessage(
 			message => {
+				vscode.window.showErrorMessage("message " + JSON.stringify(message));
 				switch (message.command) {
 					case 'alert':
-						vscode.window.showErrorMessage(message.text);
+						//vscode.window.showErrorMessage("here " + message.text);
+						return;
+					case 'apicurito':
+						vscode.window.showErrorMessage("Apicurito says " + JSON.stringify(message));
 						return;
 				}
 			},
@@ -184,11 +188,16 @@ class CatCodingPanel {
                 <meta http-equiv="Content-Security-Policy" content="default-src 'none'; img-src vscode-resource: https:; script-src 'nonce-${nonce}';">
 
                 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-                <title>Cat Coding</title>
+				<title>Cat Coding</title>
+
             </head>
             <body>
                 <img src="${catGif}" width="300" />
-                <h1 id="lines-of-code-counter">0</h1>
+				<h1 id="lines-of-code-counter">0</h1>
+				<form>
+					<input id="my_input" />
+					<input type="button" id="sendButton" value="send" />
+				</form>
 
                 <script nonce="${nonce}" src="${scriptUri}"></script>
             </body>
